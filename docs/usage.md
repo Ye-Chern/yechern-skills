@@ -2,7 +2,11 @@
 
 ## 通用本机技能
 
-先阅读项目中已有的 README、状态、计划或日志，复用当前入口。短任务可用契约、状态和日志；当撤回、版本变化或多层依赖会影响恢复时，再为任务建立账本。脚本使用 Python 标准库，无需安装第三方包。
+先阅读项目中已有的 README、状态、计划或日志，复用当前入口。一份状态文件就可以，不要求另建契约或日志。保留足以恢复的目标、当前版本、重要取舍/回退原因与下一次验证；项目已有的要求和授权继续适用。
+
+例如视觉迭代可以简记：“保留当前布局；上一版因导航遮挡正文而回退；下一步查看窄屏效果。”需要时链接截图和对应修订。细小调整可以合并；未查看的效果仍是未验证。
+
+当简记难以追踪关键依据、撤回影响或多层依赖时，再增加结构或使用账本。以下命令只适用于选择账本的任务。脚本使用 Python 标准库。
 
 从包含 `task_memory.py` 的技能目录运行命令。账本目录和项目路径按当前项目填写：
 
@@ -24,7 +28,7 @@ python <skill>/scripts/task_memory.py audit --root <ledger> --strict
 
 ## Qoder 移动端 Cloud 技能
 
-按 [`skills/durable-task-qwen-cloud/UPLOAD.md`](../skills/durable-task-qwen-cloud/UPLOAD.md) 上传技能 ZIP 并配合任务输入。Cloud 使用任务项目内账本；初始化和恢复示例：
+按 [`skills/durable-task-qwen-cloud/UPLOAD.md`](../skills/durable-task-qwen-cloud/UPLOAD.md) 上传技能 ZIP 并配合任务输入。Cloud 同样允许一个状态文件。选择账本时，将账本放在任务项目内；初始化和恢复示例：
 
 ```text
 python3 <skill>/scripts/task_memory.py init --root <project>/memory --project <project> --contract <project>/contract.md
@@ -32,12 +36,14 @@ python3 <skill>/scripts/task_memory.py resume --root <project>/memory
 python3 <skill>/scripts/task_memory.py audit --root <project>/memory
 ```
 
-预算、计时、打包和校验由本 Cloud 技能中的独立脚本处理。恢复包示例：
+预算、计时、打包和校验由本 Cloud 技能中的独立脚本处理。账本恢复包示例：
 
 ```text
 python3 <skill>/scripts/cloud_bundle.py pack --project <project> --ledger <project>/memory --output <outside-project>/recovery-001.zip
 python3 <skill>/scripts/cloud_bundle.py verify --zip <outside-project>/recovery-001.zip
 ```
+
+轻量模式可用标准 ZIP 保存恢复入口、必要说明和所需文件，恢复时核对当前副本。上述账本打包校验不适用于这种包。
 
 ZIP 创建与本地校验不等于上传成功；是否提供附件工具、实际上传目录与环境能力须在当前会话确认。Cloud 工作流目标是 Qoder 移动端 Cloud，不是 Qoder CN CLI；两者不可因产品名称相似而视作同一运行环境。
 

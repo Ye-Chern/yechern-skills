@@ -1,8 +1,14 @@
 {
-  "release": "2026.10.17.2",
+  "release": "2026.10.17.3",
   "components": {
-    "durable-task": {"source_revision": "I009", "public_revision": 3},
-    "durable-task-qwen-cloud": {"source_version": "0.2.1", "public_revision": 2}
+    "durable-task": {
+      "source_revision": "I010",
+      "public_revision": 1
+    },
+    "durable-task-qwen-cloud": {
+      "source_version": "0.2.2",
+      "public_revision": 1
+    }
   },
-  "changes": "Public documentation and privacy edits; runtime implementation retained. Synthetic tests resolve temporary roots for Windows path-alias compatibility."
+  "changes": "Task-adaptive recovery notes; optional ledger and visual iteration guidance. Documentation only; runtime and schemas unchanged."
 }

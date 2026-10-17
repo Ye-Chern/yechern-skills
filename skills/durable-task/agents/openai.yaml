@@ -1,4 +1,4 @@
 interface:
   display_name: "长任务结构与恢复"
-  short_description: "Preserve evidence, recover work, and improve from real failures"
-  default_prompt: "使用 $durable-task 推进这项长任务，保存证据与决定，并验证压缩后能继续工作。"
+  short_description: "Keep task recovery reliable with only the records it needs"
+  default_prompt: "使用 $durable-task 推进这项任务，按实际需要选择记录方式，保存足以恢复的状态并验证产物。"

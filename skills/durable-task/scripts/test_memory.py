@@ -113,7 +113,7 @@ with tempfile.TemporaryDirectory(prefix="durable-memory-") as temp:
     check("relocation rejects missing evidence", json.loads(run("show",id="E"))["node"]["revision"]==3)
     shutil.copy2(project/"source.txt",migrated/"source.txt")
     run("relocate",project=migrated)
-    check("relocation binds checked target rather than old directory", str(migrated) in run("resume"))
+    check("relocation binds checked target rather than old directory", str(migrated.resolve()) in run("resume"))
     run("relocate",project=project)
     put(node("Active","evidence","accepted",files=["source.txt"]))
     (project/"source.txt").unlink()

@@ -1,8 +1,8 @@
 {
-  "release": "2026.10.17.1",
+  "release": "2026.10.17.2",
   "components": {
-    "durable-task": {"source_revision": "I009", "public_revision": 2},
-    "durable-task-qwen-cloud": {"source_version": "0.2.1", "public_revision": 1}
+    "durable-task": {"source_revision": "I009", "public_revision": 3},
+    "durable-task-qwen-cloud": {"source_version": "0.2.1", "public_revision": 2}
   },
-  "changes": "Public documentation and privacy edits; runtime implementation retained. Core relocation test compares the resolved destination path for Windows short-path compatibility."
+  "changes": "Public documentation and privacy edits; runtime implementation retained. Synthetic tests resolve temporary roots for Windows path-alias compatibility."
 }

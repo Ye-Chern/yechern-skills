@@ -21,7 +21,7 @@ class RecoveryTests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory(prefix='durable-reliability-')
         self.addCleanup(self.temp.cleanup)
-        self.project = Path(self.temp.name) / '原项目 with spaces'
+        self.project = Path(self.temp.name).resolve() / '原项目 with spaces'
         self.project.mkdir()
         self.root = self.project / 'memory'
         (self.project / 'contract.md').write_text('Goal: recover only. No tool execution.', encoding='utf8')
@@ -106,7 +106,7 @@ class RecoveryTests(unittest.TestCase):
         (self.project / 'archive.txt').write_text('old source', encoding='utf8')
         self.put(self.node('E'))
         self.put(self.node('Old', status='retracted', files=['archive.txt']))
-        target = Path(self.temp.name) / 'new project'
+        target = Path(self.temp.name).resolve() / 'new project'
         target.mkdir()
         shutil.copy2(self.project / 'current.txt', target / 'current.txt')
         return target

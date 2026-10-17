@@ -79,7 +79,7 @@ def rows(db_path):
 class CloudBehaviorTests(unittest.TestCase):
     def test_portable_copy_detects_corruption_then_relocates_copy(self):
         with tempfile.TemporaryDirectory(prefix="qwen-portable-") as raw:
-            base = Path(raw)
+            base = Path(raw).resolve()
             original, root = init_project(base)
             source = original / "evidence.txt"
             source.write_bytes(b"original evidence bytes\x00\xff")
@@ -107,7 +107,7 @@ class CloudBehaviorTests(unittest.TestCase):
 
     def test_legacy_absolute_root_refuses_reads_until_checked_relocation(self):
         with tempfile.TemporaryDirectory(prefix="qwen-legacy-") as raw:
-            base = Path(raw)
+            base = Path(raw).resolve()
             old = base / "old-project"
             old.mkdir()
             (old / "evidence.txt").write_bytes(b"legacy bytes")
@@ -139,7 +139,7 @@ class CloudBehaviorTests(unittest.TestCase):
 
     def test_retraction_and_upstream_repair_never_auto_revive_descendants(self):
         with tempfile.TemporaryDirectory(prefix="qwen-cascade-") as raw:
-            base = Path(raw)
+            base = Path(raw).resolve()
             project, root = init_project(base)
             (project / "evidence.txt").write_text("first", encoding="utf-8")
             put(project, root, node("E", "evidence", "accepted", files=["evidence.txt"]))
@@ -161,7 +161,7 @@ class CloudBehaviorTests(unittest.TestCase):
 
     def test_retired_bindings_may_be_missing_on_copy_but_stay_retired(self):
         with tempfile.TemporaryDirectory(prefix="qwen-retired-copy-") as raw:
-            base = Path(raw)
+            base = Path(raw).resolve()
             project, root = init_project(base)
             (project / "retracted.txt").write_bytes(b"old retracted evidence")
             (project / "superseded.txt").write_bytes(b"old superseded evidence")
@@ -202,7 +202,7 @@ class CloudBehaviorTests(unittest.TestCase):
 
     def test_active_missing_binding_still_blocks_relocation(self):
         with tempfile.TemporaryDirectory(prefix="qwen-active-missing-") as raw:
-            base = Path(raw)
+            base = Path(raw).resolve()
             project, root = init_project(base)
             (project / "active.txt").write_bytes(b"required active evidence")
             put(project, root, node("EA", "evidence", "accepted", files=["active.txt"]))
@@ -221,7 +221,7 @@ class CloudBehaviorTests(unittest.TestCase):
 
     def test_long_scope_and_focus_keep_full_route_outside_short_capsule(self):
         with tempfile.TemporaryDirectory(prefix="qwen-route-") as raw:
-            base = Path(raw)
+            base = Path(raw).resolve()
             project, root = init_project(base)
             (project / "evidence.txt").write_text("x", encoding="utf-8")
             long_scope = "SCOPE-BEGIN-" + ("scope detail; " * 900) + "-SCOPE-END"
@@ -251,7 +251,7 @@ class CloudBehaviorTests(unittest.TestCase):
 
     def test_focus_event_commits_when_view_generation_fails(self):
         with tempfile.TemporaryDirectory(prefix="qwen-focus-failure-") as raw:
-            base = Path(raw)
+            base = Path(raw).resolve()
             project, root = init_project(base)
             (project / "evidence.txt").write_text("x", encoding="utf-8")
             put(project, root, node("E", "evidence", "accepted", files=["evidence.txt"]))
@@ -269,7 +269,7 @@ class CloudBehaviorTests(unittest.TestCase):
 
     def test_bundle_rebuilds_views_checks_cursor_and_roundtrips_bytes(self):
         with tempfile.TemporaryDirectory(prefix="qwen-bundle-") as raw:
-            base = Path(raw)
+            base = Path(raw).resolve()
             project, root = init_project(base)
             (project / "evidence.txt").write_bytes(b"source\x00\xff")
             put(project, root, node("E", "evidence", "accepted", files=["evidence.txt"]))
@@ -319,7 +319,7 @@ class CloudBehaviorTests(unittest.TestCase):
 
     def test_review_bundle_requires_explicit_opt_in(self):
         with tempfile.TemporaryDirectory(prefix="qwen-review-bundle-") as raw:
-            base = Path(raw)
+            base = Path(raw).resolve()
             project, root = init_project(base)
             evidence = project / "evidence.txt"
             evidence.write_text("version one", encoding="utf-8")
@@ -343,7 +343,7 @@ class CloudBehaviorTests(unittest.TestCase):
 
     def test_expired_budget_cannot_be_renewed_in_place(self):
         with tempfile.TemporaryDirectory(prefix="qwen-budget-") as raw:
-            base = Path(raw)
+            base = Path(raw).resolve()
             budget_file = base / "window.json"
             expired = {"start_epoch": 100.0, "deadline_epoch": 101.0,
                        "reserve_seconds": 10.0, "elapsed_basis": "UTC wall time; includes downtime"}

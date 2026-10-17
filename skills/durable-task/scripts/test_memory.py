@@ -8,7 +8,7 @@ def check(name, result):
         raise AssertionError(name)
     checks.append(name)
 with tempfile.TemporaryDirectory(prefix="durable-memory-") as temp:
-    project = Path(temp)
+    project = Path(temp).resolve()
     root = project / "memory"
     (project / "contract.md").write_text("Goal: investigate. Done: observable validation. Scope: temporary data only.", encoding="utf-8")
     (project / "source.txt").write_text("observed alpha", encoding="utf-8")

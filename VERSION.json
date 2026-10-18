@@ -1,14 +1,23 @@
 {
-  "release": "2026.10.17.3",
+  "release": "2026.10.18",
   "components": {
     "durable-task": {
-      "source_revision": "I010",
+      "source_revision": "I011",
       "public_revision": 1
     },
     "durable-task-qwen-cloud": {
       "source_version": "0.2.2",
       "public_revision": 1
+    },
+    "progressive-reading": {
+      "public_revision": 1
+    },
+    "novel-worldbook": {
+      "public_revision": 1
+    },
+    "palimpsest": {
+      "public_revision": 1
     }
   },
-  "changes": "Task-adaptive recovery notes; optional ledger and visual iteration guidance. Documentation only; runtime and schemas unchanged."
+  "changes": "Combine five skills as yechern-skills; cherry-pick I011 documentation, retain public portability fixes, sanitize palimpsest, and test text segmentation."
 }

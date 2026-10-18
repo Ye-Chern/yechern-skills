@@ -29,3 +29,5 @@ jobs:
         run: python -B skills/durable-task/scripts/test_reliability.py
       - name: Cloud checks
         run: python -B -m unittest discover -s skills/durable-task-qwen-cloud/tests -v
+      - name: Reading segmenter
+        run: python -B -m unittest discover -s skills/progressive-reading/tests -v

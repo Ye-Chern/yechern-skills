@@ -1,49 +1,45 @@
-# Durable Task
+# yechern’s skills
 
-用于长任务恢复。按任务需要保存状态，必要时追踪证据版本与依赖。包含两个技能：
+一组自用的 agent 技能，整理成长任务恢复、全文阅读、小说世界书和数学研究的工作流程。
 
-- `durable-task`：通用工作流，组织恢复入口、版本化证据和依赖。当前修订为 I010。
-- `durable-task-qwen-cloud`：Qoder 移动端 Cloud 的上传、恢复和 ZIP 交付流程。当前来源版本为 v0.2.2。
+## 技能
 
-Python 脚本只依赖标准库。账本帮助恢复已记录的状态，不验证研究结论本身；Cloud 技能也不延长平台时限或保证环境持续运行。
+- [durable-task](skills/durable-task/SKILL.md)：跨上下文保存进度、恢复工作，按需追踪证据版本与依赖。当前修订 I011。
+- [durable-task-qwen-cloud](skills/durable-task-qwen-cloud/SKILL.md)：Qoder 移动端 Cloud 的上传、恢复、预算与 ZIP 交付。当前来源版本 v0.2.2。
+- [progressive-reading](skills/progressive-reading/SKILL.md)：连续阅读小说正文，修订理解、定向回读并保存准确断点。
+- [novel-worldbook](skills/novel-worldbook/SKILL.md)：将小说整理为可查阅的世界书；需同时安装 progressive-reading 和 durable-task。
+- [palimpsest](skills/palimpsest/SKILL.md)：围绕证明障碍研究数学命题，探索证明与反例，区分实验、文本证明和形式证明。
 
-## 安装通用技能
+## 安装与使用
 
-把 `skills/durable-task/` 整个目录复制到代理宿主支持的 skills 目录，保留相对结构，然后重新加载技能。例如 Codex 常用 `$HOME/.codex/skills/durable-task/`，实际位置以宿主配置为准。
+下载 [最新发布](https://github.com/Ye-Chern/yechern-skills/releases/latest) 的 `yechern-skills.zip`，将需要的 `skills/<名称>/` 目录放入宿主支持的 skills 目录，保留内部结构并重新加载。也可以直接克隆仓库后复制目录。实际安装位置以宿主配置为准。
 
-也可从 [Releases](https://github.com/Ye-Chern/durable-task/releases/latest) 下载两个独立技能包及 SHA-256 校验文件。
+发布同时提供五个单项 ZIP 和 SHA-256 校验文件。使用 novel-worldbook 时，一并安装它的两个前置技能；不要只复制 SKILL.md。Cloud 技能通过上传使用，步骤见 [UPLOAD.md](skills/durable-task-qwen-cloud/UPLOAD.md)。它面向 Qoder 移动端 Cloud，不是 Qoder CN CLI 安装包。
 
-Qoder 移动端 Cloud 的上传步骤和提示模板见 [`skills/durable-task-qwen-cloud/UPLOAD.md`](skills/durable-task-qwen-cloud/UPLOAD.md)。该技能包通过任务 ZIP 上传使用，不等同于 Qoder CN CLI 的安装或运行说明。
+可按下面方式开始：
 
-## 记录方式由任务决定
+> 使用 $durable-task 继续这项任务，复用现有进度记录，按实际需要选择记录方式。
 
-默认复用已有入口，或用一份 `work/state.md` 保存目标、当前进展、关键取舍或回退原因、下一步及验证方式。按需引用已有材料，不要求单独创建契约、日志或账本。
+> 使用 $novel-worldbook，先加载 $progressive-reading 与 $durable-task。原文在【路径】。请读完全文并整理世界书，允许全书剧透，笔记保持简短。
 
-模型可以根据任务、工具和恢复风险选择方法、步骤、文件布局与记录频率。视觉、写作和交互任务可以反复看效果、判断和修改，保留有助恢复的版本与反馈；主观品味可以作为验收依据。无需为每次尝试或每个子问题建依赖。
+> 使用 $palimpsest 研究【命题】，保留原问题，给出证明、反例或明确的未解部分，并说明实际验证范围。
 
-当简记已难以追踪关键依据、撤回影响或多层依赖时，再增加结构或使用账本。任务长、文件多、模型能力不同，都不预设固定记录模板。工作中可以收简或增加结构，判断标准是能否可靠恢复，以及记录是否值得其成本。
+宿主不支持自动加载时，让模型读取对应入口及当前需要的引用材料。Python 辅助脚本只用标准库；阅读和数学技能也可使用当前环境已有的工具。
 
-自主选择记录方式仍需保留事实与猜测的区别、重要失效信息、实际验证范围和用户授权。依据变化时，复核受影响的重要结论。
+## 按任务决定记录方式
 
-## 可选账本
+默认复用已有入口，或用一份 `work/state.md` 保存目标、进展、关键取舍或回退原因、下一步和验证方式。模型可选择方法、步骤、文件布局与记录频率；视觉、写作和交互任务可按作品反馈反复调整。
 
-需要版本化账本时，可用以下命令初始化、恢复、读取证据和审计：
+简记难以追踪关键依据、撤回影响或多层依赖时，再增加结构或使用账本。记录成本高时可以收简，保留恢复所需的依据与失效信息。事实与猜测、实际验证范围和用户授权仍须清楚。
 
-```text
-python <skill>/scripts/task_memory.py init --root <ledger> --project <project> --contract <contract.md>
-python <skill>/scripts/task_memory.py resume --root <ledger>
-python <skill>/scripts/task_memory.py show --root <ledger> --id E1
-python <skill>/scripts/task_memory.py audit --root <ledger> --strict
-```
+用户要求的必达范围与可调的加工深度分开处理。例如，全文阅读任务可以减少笔记和边缘条目；尚有未读正文时，保存断点并保留原目标。
 
-按需创建节点或更新前沿：`put --file <node.json>`、`focus --file <focus.json>`。通用账本字段和迁移限制见 [`docs/usage.md`](docs/usage.md)。
+## 说明与验证
 
-Cloud 技能提供另一套 `task_memory.py`，并附带预算、计时和恢复包工具。它有自己的 schema 和流程，当前不会自动与通用账本互通；不要交叉替换同名脚本。具体差异见 [`docs/compatibility.md`](docs/compatibility.md)。
+[使用说明](docs/usage.md)包含可选账本与 Cloud 命令；[兼容性说明](docs/compatibility.md)区分两套账本。它们的同名脚本和数据格式不能直接互换。
 
-## 验证范围
+脚本检查覆盖文件绑定、恢复、迁移、预算、计时和文本分段。它们不证明模型读懂全文、数学结论成立或云环境长期可用。实际命令、运行结果和演练边界见 [验证记录](docs/validation.md)。
 
-发布前通过 54 项脚本检查：通用版 24 项基础检查、13 项可靠性测试，Cloud 版 17 项测试。检查范围不包括模型恢复能力、研究结论或平台长期运行。本次为记录方式的文档修订，未进行新的 Qoder Cloud 实战复测。命令与范围见 [验证说明](docs/validation.md)。
+## 许可与来源
 
-## 许可证
-
-[MIT](LICENSE)。
+[MIT](LICENSE)。技能来自个人任务实践，含模型辅助生成与修订；公开包保留工作方法和辅助工具，排除私人任务记录与小说原文。研究文献保留原作者署名与链接，相关权利归原作者。来源说明见 [SOURCES.md](SOURCES.md)。

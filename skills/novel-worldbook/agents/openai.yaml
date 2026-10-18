@@ -1,0 +1,4 @@
+interface:
+  display_name: "小说世界书"
+  short_description: "结合全文阅读与长任务恢复，将小说的人物、世界、规则和事件整理成可查阅的世界书"
+  default_prompt: "使用 $novel-worldbook，并先加载 $progressive-reading 与 $durable-task，读完这部小说全文并整理世界书。"

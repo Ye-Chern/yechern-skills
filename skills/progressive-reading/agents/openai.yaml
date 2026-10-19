@@ -1,4 +1,4 @@
 interface:
   display_name: "渐进式小说阅读"
-  short_description: "连续读完小说正文，按需记下关键变化与原文位置，保存断点以便跨上下文续读"
-  default_prompt: "使用 $progressive-reading 连续读完这部小说，按需要记笔记，保存准确的已读范围与续读位置。"
+  short_description: "通过稀疏预读、预测、波次精读与原文反刍读完整部小说，保存可续读的判断与断点"
+  default_prompt: "使用 $progressive-reading 按稀疏预读、预测、波次精读、反刍的循环读完这部小说，简记整体印象修订与准确续读位置。"

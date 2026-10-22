@@ -52,3 +52,29 @@ CI 在 Linux 和 Windows 上运行全部四套检查，每个平台合计 60 项
 本次没有重新运行小说长时阅读、真实上下文压缩、Qoder Cloud 或数学证明器实验。来源维护记录中的小型续读演练属于既有记录，不计为本次新实验。palimpsest 的数学工作流经公开化文本审阅；格式与链接检查不证明其研究能力。
 
 合集与单项 ZIP 保留相应 LICENSE 和版本信息，打包后检查成员字节与 CRC。novel-worldbook 单项包需要另外安装两个前置技能；合集包含所需目录。
+
+## 2026.10.22 七技能修订
+
+本次在 Windows、Python 3.12 运行原有四组共 60 项检查，以及 BoundForge 的 22 项测试，均通过。原有 Python 脚本与测试逐字节保持不变；BoundForge 仅统一文本换行、清理一处空行的行尾空格，所有 Python 文件与来源的语法树一致，其余运行资源字节一致。
+
+新增运行方式：
+
+```text
+python -B scripts/validate_collection.py
+```
+
+这个检查覆盖七个包的入口名称、说明、NOTICE、HELP、许可证及本地 Markdown 链接。各技能还通过 skill-creator 的入口格式检查。公开文件检查排除本机路径、个人标识、凭据、私人记录与运行数据库；每个单项包附 MIT 许可。打包时逐成员比较字节并检查 ZIP CRC，解压后的合集运行同一套 82 项检查；BoundForge 单项 ZIP 解压后也运行了快速示例。
+
+BoundForge 的测试与示例，从其安装目录运行：
+
+```text
+python -B -m unittest discover -s tests -v
+python -B examples/quickstart.py
+python -B examples/simulate_stagnation.py
+```
+
+快速示例记录 `inf_{x>0}(2+1/x)=2`，并给出不达到的论证。停滞示例使用合成时钟，没有运行数小时研究。CI 已加入 BoundForge 测试、快速示例及合集检查，在 Linux 与 Windows 执行；本提交的执行结果以 Actions 为准。
+
+改写由主代理与三个 GPT 6 Luna 子代理完成，主代理检查集成。阅读、恢复和数学工作流做了文字情境核查；一次独立前向演练实际使用 BoundForge 研究 `inf_{x>0}(x+1/x)`，保存上下界、达到性论证及 SQLite 账本。主代理读回论证与最终状态，核对下界 2、上界 2、在 x=1 达到、无未关闭 work 或 episode、账本链与 SQLite 完整性通过。初次调用遗漏必填参数与误用示例 ID 后，按现有命令帮助修正即可继续；失败调用未写入记录。
+
+这些是脚本检查、文档核查和一个小型实际用例；没有进行真实长时数学研究、小说全文阅读、上下文压缩恢复、Qoder Cloud 或证明器实验，不能据此估算研究成功率。

@@ -1,31 +1,5 @@
-# 维护记录
+# Public maintenance notes
 
-此文件随公开分发重新建立。原任务数据与私人维护记录未纳入仓库。
+This file contains no task-specific history. Record future skill improvements only when the maintainer has a reproducible observation that belongs in a public package. Keep private project evidence and operational logs in their original project.
 
-## 当前通用实现：I009
-
-当前实现包含文件与依赖版本校验、复制后显式迁移、按当前依赖闭包生成入口、可选严格完成记录检查、成功字符预算延续、带版本检查的可编辑回写，以及账本提交后视图重建。
-
-历史维护项 I005 涉及 Git 换行转换：绑定字节可能在检出后改变。迁移时应比对实际文件；需要保留字节时仅对相关文件设置 attributes 并核对索引，不刷新哈希掩盖差异。
-
-新增观察按 references/evolution.md 记录，附场景、变更、验证范围与回退方式。修改前保留相关文件版本。
-
-## 公开分发修订 2
-
-Windows CI 的临时目录路径表示与解析后路径不同，导致迁移测试误报。测试改为比较解析后的目标路径；账本实现未变。初始失败记录与后续检查保留在 Actions 历史。
-
-公开分发修订 3 统一测试夹具的临时目录根路径，修复相同别名差异导致权限故障模拟未命中的问题。模拟条件、异常要求与运行实现均保留。
-
-## I010 / 2026-10-17 / 记录方式自适应
-
-观察：视觉迭代反馈指出，恢复状态有用，但逐项依赖记录成本过高。原入口虽有轻量模式，通用要求仍可能被理解为默认建账本。反馈未附原项目或时间测量。
-
-修改：默认使用已有入口或一个状态文件，由模型按任务和恢复风险选择方法、布局与记录粒度。视觉等任务可主观迭代；简记不足时才增加结构。仍保留依据失效后的复核、授权和实际验证范围。脚本与 schema 未变。
-
-回退：恢复上一发布标签中的技能说明、profiles 和界面提示；运行脚本无需回退。格式与情景检查范围见 docs/validation.md。
-
-## I011 / 2026-10-18 / 必达范围与加工深度
-
-从已维护的通用技能挑入两处说明：保留用户要求的必达范围，成本高时先减少非必要加工；阅读覆盖与整理深度分别判断。具体阅读流程由 progressive-reading 处理。脚本、账本格式与公开版的迁移测试未变，其余本机文档未整份覆盖公开版本。
-
-原维护记录包含一次小型合成续读演练；本次发布不把该历史记录当作新长时实验。回退可恢复上一发布的入口和 profiles。
+For a proposed change, record its trigger, affected behavior, validation scope, and rollback method. Distinguish proposed, implemented, validated, and reverted work. See [references/evolution.md](../references/evolution.md) for the maintenance procedure.

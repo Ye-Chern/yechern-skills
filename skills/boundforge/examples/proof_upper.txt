@@ -1,0 +1,2 @@
+Toy proof (review manually): x_n=n>0 is feasible, f(n)=2+1/n->2, hence inf f<=2.
+The infimum is not attained, since 1/x>0 for every finite x>0.

@@ -1,46 +1,30 @@
-# Cloud 运行边界
+# Cloud runtime details
 
-首次运行记录当前模式、工具、工作目录、Python、必要依赖、单次工具等待限制和附件交付方式。路径、资源与工具名以现场为准。
+Check a tool, path, dependency, or delivery method when the task relies on it. Record only what affects this task; mark untested capabilities unknown. Paths and tool names must come from the current session.
 
-技能 ZIP 与任务恢复 ZIP 分开。跨轮依赖保存为用户可下载的文件；沙箱写盘本身不完成交付。
+Keep the skill ZIP separate from task recovery files. A ZIP written to temporary cloud storage is not delivered until the current session confirms an attachment or other user-accessible handoff.
 
-## 时间预算
+## User-defined time windows
 
-用户给出时长后创建窗口：
+When the user gives a total duration, create one budget file and reuse it after recovery:
 
 ```text
-python3 <skill>/scripts/work_budget.py start --file <project>/window-001.json --minutes 180 --reserve-minutes 10
-python3 <skill>/scripts/work_budget.py status --file <project>/window-001.json
+python3 <skill>/scripts/work_budget.py start --file <project>/window.json --minutes <user-selected-minutes> --reserve-minutes <delivery-reserve>
+python3 <skill>/scripts/work_budget.py status --file <project>/window.json
 ```
 
-预算按 UTC 墙钟计算，包含断线时间。恢复同一窗口不重置截止。进入 deliver/expired 后保存现况并交付，任务提前完成也可交付。
+The budget uses UTC wall time and includes disconnection time. A restored window keeps its original deadline. A new window requires the user's instruction; keep the earlier record as history. When the budget reaches its delivery reserve, finish current validation and handoff rather than opening new searches.
 
-用户明确增加时间时创建新编号窗口，记录新指令与旧窗口的关系，先取消旧监视者。没有新指令时不得延长窗口。
+This script records time only. It does not register a model event or keep the session alive. Use a checkpoint watcher only when requested or needed for continuation and the current host confirms a real completion event; see [wake-events.md](wake-events.md).
 
-预算脚本不注册模型事件。后台续跑依赖宿主实际支持的完成通知，按 [wake-events.md](wake-events.md) 核对能力。普通后台进程写文件不能证明主代理会继续。
+## Long calculations
 
-## 可恢复计算单元
+Break a calculation into units that fit the actual tool limits. Keep each unit's purpose, input range, generator version, raw output, independent check, and last committed result in the task's existing state or ledger. Commit a unit only after its check passes. On recovery, verify coverage, gaps, and duplicates; changed inputs or generators may invalidate earlier units.
 
-长计算先估时，再拆成工具限制内可完成的块。记录任务目的、输入域、生成器版本、区间、输出、校验入口、最后已提交单元和停止条件。
+Write new or fixed outputs to the recovered copy. Check critical reproduction commands there before delivery so they cannot accidentally write into the original project.
 
-每块按以下顺序提交：临时结果 → 独立检查 → 原子替换固定结果 → 更新清单 → 写提交标记。标记包含输入、源码和结果哈希。结果冲突时停止复核，不覆盖旧证据。
+## Processes and uncertain results
 
-恢复时核对已提交块的覆盖域、缺口和重复。未提交块可重算；输入或生成器改变时明确失效范围。日志中的 OK、旧 PID、ETA 和无时间戳的状态不代替检查。
+Process state and host notifications are separate observations. A file marker proves that a file can be read; a process ID or ETA may be stale. Across environments, treat an old process as unknown. After timeout or disconnection, inspect the result before retrying; repeat only when safe.
 
-脚本从当前位置或显式参数解析项目根。交付前在实际恢复副本检查关键复现命令，避免读写原项目。
-
-## 回执与进程
-
-文件/进程存活和宿主通知分别验证。事件试验记录真实 job ID、实际回执及其处理；文件标记只证明该文件可读。
-
-结束前停止本任务不再需要的进程。跨环境的旧进程状态视为 unknown，不按旧 PID 操作。超时或断线后先查结果，确认可安全重复才重试。
-
-Cloud Agents API 与移动端会话的账号、环境、收费和生命周期未在此实现中验证。本技能不配置外部调度器；需要时单独接入并测试。
-
-## 已有观察与未验证项
-
-已有一次合成任务上传、恢复、回传与本地独立复算，以及两次约 90 秒和一次 150 秒的 watcher 完成回执观察。这些是有限现场观察，不是长期可靠性测量。
-
-长期任务回传曾出现迟到计时结果、缺失宿主 ID 和过时前沿。v0.2.1 据此修订了状态与交付说明，脚本未变；修订后的模型执行效果未在新云端任务中复测。
-
-小时级实例保留、精确回执延迟、运行中宿主任务取消和跨产品等价性仍未验证。
+This package does not configure external schedulers or validate Cloud Agents API account access, billing, or lifecycle behavior. Test any such integration in its actual environment before relying on it.

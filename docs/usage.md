@@ -72,3 +72,9 @@ python skills/progressive-reading/scripts/segment_text.py <novel.txt> --out <emp
 palimpsest 可单独使用；已有 durable-task 时复用恢复入口。保留原题、定义和适用范围，按当前证明障碍选择证明、反例、文献、计算或独立审查。
 
 子代理、文献检索和形式化工具均依当前环境能力与授权使用；不可用时说明范围。自然语言证明可以作为明确标注的结果，不能冒充形式系统认证。入口与核查方法见 [SKILL.md](../skills/palimpsest/SKILL.md) 和 [verification.md](../skills/palimpsest/references/verification.md)。
+
+BoundForge 适合持续研究上下界与最优值。完整复制 skill 后，从其目录运行 `python examples/quickstart.py`；默认在临时目录完成一个下确界与非达到性的实例。有意保留演示记录时使用 `--output <新目录>`。自己的研究从 [BoundForge 入口](../skills/boundforge/SKILL.md) 开始，数据库与论证放入任务目录。它与 palimpsest 可按需要配合。
+
+## 项目和 skill 设计
+
+gpt-human-style 从当前目标和典型用例出发，改出可以运行或审阅的结果。通用说明集中在当前项目自己的 NOTICE，少见情况放入 HELP；按实际触发查阅。它不要求其他项目复制六条习惯或新增检查表。入口见 [SKILL.md](../skills/gpt-human-style/SKILL.md)。

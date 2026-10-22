@@ -1,0 +1,21 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "title":"BoundForge v2.1 finding submission",
+  "type":"object",
+  "required":["episode_id","kind","statement"],
+  "properties":{
+    "episode_id":{"type":"string","minLength":1},
+    "kind":{"enum":["lower","upper","lemma","counterexample","limiting","literature","attained","nonattained","observation","obstruction","method","negative"]},
+    "value":{"type":["number","null"]},
+    "statement":{"type":"string","minLength":1},
+    "artifact_path":{"type":["string","null"],"minLength":1},
+    "depends":{"type":"array","items":{"type":"string"},"uniqueItems":true}
+  },
+  "additionalProperties":false,
+  "allOf":[
+    {"if":{"properties":{"kind":{"not":{"enum":["observation","obstruction","method","negative"]}}}},
+     "then":{"required":["artifact_path"],"properties":{"artifact_path":{"type":"string","minLength":1}}}},
+    {"if":{"properties":{"kind":{"enum":["lower","upper"]}}},
+     "then":{"required":["value"],"properties":{"value":{"type":"number"}}}}
+  ]
+}

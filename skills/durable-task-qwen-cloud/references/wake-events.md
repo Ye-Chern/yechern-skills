@@ -1,35 +1,29 @@
-# 完成回执驱动的有限检查
+# Optional checkpoint notifications
 
-用于用户给定总时长的长窗口。计时不是任务进展；主代理仍做实际工作。普通 `nohup` / `&` / 写标记只改变进程或文件。**让宿主跟踪一个后台任务并回报其完成**才是继续触发点；不能臆造 `run_in_background` 参数、工具名或 hooks。
+Use this only when a user-defined work window needs a later checkpoint and the current host can return a real background-task completion event. A budget or timer file alone cannot wake the model. If the host cannot provide a completion event, save the state and recovery files for the next user message.
 
-现场先看工具接口。有真实受支持的后台工具完成通知时可直接用它；已有移动端短时试验观察到的路径是一个后台子代理（watcher）执行等待，完成回执触发主代理继续。没有后台接口且子代理回执也不可用时，降级为阶段内检查和交付恢复包。不改全局 hooks，不接收费 API。
+## Start one checkpoint
 
-## 每次仅一个时点、一个监视者
-
-预算和计时文件均放项目内。先保存 checkpoint，创建预算后设时点：
+Save the current project state first. If the user gave a total window, create its budget once:
 
 ```text
-python3 <skill>/scripts/checkpoint_timer.py arm --budget <project>/window-001.json --record <project>/jobs/tick-001.json --interval-seconds 1200
+python3 <skill>/scripts/work_budget.py start --file <project>/window.json --minutes <user-selected-minutes> --reserve-minutes <delivery-reserve>
 ```
 
-这是“一次检查”，绝对时点取 20 分钟后与交付预留开始二者中更早者。重试 arm 不能覆盖同名记录；同一个窗口不重建预算。用户可改间隔，后续沿用最初选定间隔，除用户明确调整外不得缩短。窗口启动时在运行状态记最多检查数 `ceil((deadline_epoch - reserve_seconds - start_epoch) / interval_seconds)`（非正数就不启动）；每次设时点消耗一次，不自动增加额度。提前完成就停，不为用尽次数继续等待。没有总时长就不启用自动续设。脚本保护单个时点；检查次数及宿主任务生命周期由主代理按此协议管理。
+Use `status` to check the same budget after recovery. Do not reset its deadline. Choose an interval that fits the task and the time left before the delivery reserve, then arm a new record:
 
-把实际路径、时点记录和原任务 ID 交给**一个**后台 watcher；保存宿主返回的真实 job/thread ID，沿用用户选择的运行方式，不主动切换收费模型。可用以下提示（替换路径）：
+```text
+python3 <skill>/scripts/checkpoint_timer.py arm --budget <project>/window.json --record <project>/jobs/tick-001.json --interval-seconds <chosen-interval>
+```
 
-> 你只负责本窗口的一次计时回报，不能开启其他 agent、解题、续设时点或更改预算。反复执行 `python3 <skill>/scripts/checkpoint_timer.py wait --record <project>/jobs/tick-001.json --max-seconds 60`；返回 pending 就在同一记录上等待下一段。按实际命令超时可将片段增至 240 秒以内，每段保留余量。只在 checkpoint/deliver/cancelled 或失败时结束并回报真实 JSON、记录路径和任务 ID。不得把 pending 当作时间已到。不要用短频率轮询。取消就退出。
+Give one supported background watcher the record path, timer ID, and the original task ID. The watcher waits on that same record with `checkpoint_timer.py wait --record ... --max-seconds ...`; if it reports `pending`, it continues waiting on the same record. Each foreground wait slice must fit the host's actual tool timeout and the script's 240-second maximum. Do not arm another timer to extend a pending checkpoint.
 
-watcher 内的前台等待保持在工具允许范围；由 watcher 的后台完成回执返回主代理。主代理启动后继续核心任务，有实际待完成工作时不要主动结束整个窗口。若主回复确已结束，回执可以提供再次继续的机会，仍需实际核验触发。不能只生成定时日志再声称已注册回执。
+Record the real host job or thread ID in the project when the host returns it. The timer's placeholder text is not a job ID. The watcher only reports the timer result and stops; it does not do task work, change the budget, or create additional watchers.
 
-把每次宿主实际返回的 ID 立即写入项目内一个运行状态文件（例如 jobs/runtime.json），按时点 ID 保留各条记录：窗口/原任务 ID、计时记录相对路径与 UUID、host job/thread ID、启动观测时间、运行/完成/取消/失败状态、回执是否已处理及处理观测时间。不得猜 ID。arm 输出中的 host_job_id 是“另行登记”的占位提示，不能把该文字当实际ID；启动未成功就记失败，不填造假的成功状态。结果时点证明 timer 返回了观察值，不单独证明主代理收到事件；续跑后把实际回执和处理情况记到同一状态文件，仍不将它当实例保活证据。
+## Handle a return
 
-## 主代理收到回执
+Check that the receipt matches the timer and task IDs, then inspect the result file, budget, and project state. A timer result proves only that the time was observed. It does not prove the host delivered a notification or that the task progressed.
 
-先核对回执 ID/对应计时结果，查看预算和任务现况；空回执只读同一记录的 `.result.json`，缺失即失败，不能假装计时成功。重复回执只处理一次。
+If work remains and the old watcher has ended, save a fresh checkpoint and arm one new record using the same deadline. If the task is complete, stopped, or at its delivery reserve, cancel the timer and stop the watcher if the host supports that action. Record whether stopping was confirmed. Ignore duplicate or late receipts after checking them against the task record.
 
-- 有时间且任务未闭合：保存本阶段成果与下一动作，继续工作；上一 watcher 已终止才按新记录设下一个时点。一次只持有一个计时 watcher，不预设一串独立代理。续设次数受不变的总截止约束，不延长原窗口。
-- 已完成、用户停止或进入交付：`checkpoint_timer.py cancel --record ...`，并用真实工具停止本任务 watcher（如支持）；交付产物/恢复包。取消不等同于已杀死宿主任务，准确记录实际结果；迟到回执不得重启任务。
-- 计时/回执失败：本窗口禁用自动续设，报告原因；保存恢复状态，用当轮可用检查或用户消息继续。不用连串重试保活。
-
-`.result.json` 是一次计时观察，jobs 中宿主状态是滚动运行记录，不能当数学证据。恢复包保留原预算和时点；迁到新环境后旧进程状态为 unknown，只核对文件和实际宿主任务，不能假定旧 watcher 仍在。已过交付时点直接交付，不补发过期检查。
-
-官方 [CLI 子代理说明](https://docs.qoder.com/cli/subagent) 描述后台完成通知回到主会话；它仅作机制参考，移动端的支持与可靠性以当前会话实测为准。
+If the watcher or receipt fails, stop automatic rearming for that window. Save the recovery state and continue only when a user message or another real host event arrives. Never extend a window without the user's new instruction.

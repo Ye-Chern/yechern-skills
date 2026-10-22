@@ -1,9 +1,13 @@
-# 每次上传的 Qwen 云端技能包
+# Uploading this skill to Qoder Cloud
 
-把本 ZIP 上传到 Qoder 移动端 Cloud，并和任务一起发送下面的话。已有任务再上传最新恢复 ZIP；新任务无需恢复 ZIP。不要把 Windows 本机路径当云端路径。
+Upload the skill ZIP to Qoder Cloud and send a task prompt with the actual goal. For an existing task, include its latest recovery ZIP. Do not provide a Windows path as though it were available in the cloud.
 
-> 请先解压我上传的技能 ZIP，读取 durable-task-qwen-cloud/SKILL.md，并按它处理本次任务。若有任务恢复 ZIP，先核对/恢复实际解压副本，读契约和当前证据再继续。这里是 Qoder Cloud。本轮时间预算：【例如 180 分钟，提前完成即可交付】；检查间隔：【默认 20 分钟，可改】。请用本会话实际支持的后台子代理完成回执，设一个受本窗口截止约束的计时监视者，回执到达后检查进度并继续有意义的工作；没有该机制就明确说明并保存恢复状态。每阶段保存可恢复进度，结束前交付用户可下载的恢复 ZIP。任务是：【写任务】。
+Suggested prompt:
 
-本包包含技能、标准库脚本和合成测试。默认复用原入口或一个状态文件；按实际恢复风险决定是否使用账本。scripts/work_budget.py 记录总预算，scripts/checkpoint_timer.py 记录有限检查时点；续跑取决于宿主的完成事件。scripts/cloud_bundle.py 生成和核对恢复 ZIP，实际上传使用当前环境的交付工具。
+> Please unpack the skill ZIP and follow `durable-task-qwen-cloud/SKILL.md` for this task. If I attached a recovery ZIP, unpack it to a new directory, inspect the current recovery entry and relevant evidence, then continue from the stated next action. The task is: [describe the task].
+>
+> [Optional: This work has a total time window of ___; reserve ___ for delivery. If a checkpoint interval would help, use ___.]
 
-脚本回归命令：`python3 -m unittest discover -s <skill>/tests -v`（验证本地脚本行为，不证明云端保活、模型恢复成功率或研究结论）。
+The package includes the skill, standard-library scripts, and synthetic tests. A short task may use the existing project entry or one state file. Use a ledger or timer only when the task needs it. When the task needs cross-session recovery, prepare a recovery ZIP and confirm delivery through the actual attachment tool available in the cloud session.
+
+To check the local script behavior, run `python3 -m unittest discover -s <skill>/tests -v`. This does not validate cloud session lifetime, model recovery quality, or research conclusions.

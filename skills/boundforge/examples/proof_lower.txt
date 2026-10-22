@@ -1,0 +1,1 @@
+Toy proof (review manually): Let f(x)=2+1/x on x>0. Then f(x)>2, hence inf f>=2.

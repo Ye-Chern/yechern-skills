@@ -9,3 +9,11 @@ Cloud 的旧通用账本迁移需通过 Cloud 版本的 `relocate` 明确检查�
 Cloud 技能文档针对 Qoder 移动端 Cloud，包含其上传 ZIP、恢复和交付步骤。它不描述 Qoder CN CLI 的能力。该仓库没有对 Qoder CN CLI 安装、会话恢复、时限或后台执行做兼容性测试，因此这些能力应记为未验证。
 
 两个技能都以 Python 标准库实现脚本。已检查的代码没有引入第三方 Python 包；这不代表所有 agent host 都自动支持技能安装、附件上传或后台回执。宿主工具和运行限制以当前环境实测为准。
+
+## BoundForge
+
+BoundForge 是另一套 SQLite 事件账本，独立于上述两种 task_memory.py；不提供三者间的数据转换。它处理下确界的上下界、达到性、研究方向和 episode；palimpsest 可以帮助研究与核查，durable-task 可以管理项目入口，均不是运行 BoundForge 的前置依赖。
+
+完整复制 `skills/boundforge/` 后，从该目录运行 `python -m boundforge --db <任务数据库绝对路径> ...`。程序不需要联网或第三方包。当前版按绝对路径绑定附件；数据库与附件搬迁及分享运行记录时查 [HELP](../skills/boundforge/HELP.md)。
+
+gpt-human-style 是设计指导，不要求其他技能先加载它。各包已有自己的 NOTICE 与 HELP，无需在每个任务重复引入设计习惯。

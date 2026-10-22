@@ -1,5 +1,13 @@
 # 变更记录
 
+## 2026.10.22
+
+按 gpt-human-style 逐个改进原有五个 skill，简化普通路径，保留领域关键要求，将通用说明与少见情形集中在各包的 NOTICE、HELP。保留全文阅读循环、世界书的原文依据、证明状态与依赖复核；Cloud 的预算和有限监视按任务启用。
+
+新增 gpt-human-style v1.3 与 BoundForge v2.1-alpha，合集现含七个 skill。BoundForge 包含完整运行代码、示例、schema 和测试，整理为单目录安装，原有程序逻辑未变。
+
+新增合集结构与链接检查，CI 加入 BoundForge 测试和快速示例。每个独立包附 MIT 许可证；发布提供合集、七个单项包与校验文件。清理私人来源路径和本地历史，保留研究文献归因。
+
 ## 2026.10.18
 
 仓库改名为 yechern-skills，保留原 durable-task 提交与发布历史。新增 progressive-reading、novel-worldbook 和 palimpsest。通用技能合入 I011 的必达范围/加工深度说明，保留公开版脱敏及 Windows 测试修正；Cloud 保持 v0.2.2。

@@ -1,0 +1,19 @@
+{
+  "schema_version": 2,
+  "models": [
+    {
+      "index": 1,
+      "model_id": "example-qwen-model",
+      "version": "pin-exact-deployment-version",
+      "prior": {"alpha": 3, "beta": 1},
+      "evidence": {}
+    },
+    {
+      "index": 2,
+      "model_id": "example-gpt-model",
+      "version": "pin-exact-deployment-version",
+      "prior": {"alpha": 3, "beta": 1},
+      "evidence": {}
+    }
+  ]
+}

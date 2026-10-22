@@ -31,3 +31,11 @@ jobs:
         run: python -B -m unittest discover -s skills/durable-task-qwen-cloud/tests -v
       - name: Reading segmenter
         run: python -B -m unittest discover -s skills/progressive-reading/tests -v
+      - name: Skill packages and links
+        run: python -B scripts/validate_collection.py
+      - name: BoundForge
+        working-directory: skills/boundforge
+        run: python -B -m unittest discover -s tests -v
+      - name: BoundForge quickstart
+        working-directory: skills/boundforge
+        run: python -B examples/quickstart.py

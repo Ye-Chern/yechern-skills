@@ -1,23 +1,32 @@
 {
-  "release": "2026.10.18",
+  "release": "2026.10.22",
   "components": {
     "durable-task": {
       "source_revision": "I011",
-      "public_revision": 1
+      "public_revision": 2
     },
     "durable-task-qwen-cloud": {
       "source_version": "0.2.2",
-      "public_revision": 1
+      "public_revision": 2
     },
     "progressive-reading": {
-      "public_revision": 1
+      "public_revision": 2
     },
     "novel-worldbook": {
-      "public_revision": 1
+      "public_revision": 2
     },
     "palimpsest": {
+      "public_revision": 2
+    },
+    "gpt-human-style": {
+      "source_version": "1.2",
+      "version": "1.3",
+      "public_revision": 1
+    },
+    "boundforge": {
+      "source_version": "2.1.0-alpha",
       "public_revision": 1
     }
   },
-  "changes": "Combine five skills as yechern-skills; cherry-pick I011 documentation, retain public portability fixes, sanitize palimpsest, and test text segmentation."
+  "changes": "Revise each skill using gpt-human-style, add package-local NOTICE and HELP, publish gpt-human-style and complete BoundForge skill; preserve runtime APIs."
 }
